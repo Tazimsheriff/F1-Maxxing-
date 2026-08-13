@@ -8,23 +8,5 @@
       "root": "backend",
       "entrypoint": "main.py"
     }
-  },
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "backend"
-    },
-    {
-      "src": "/data/(.*)",
-      "dest": "backend"
-    },
-    {
-      "src": "/health",
-      "dest": "backend"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "frontend"
-    }
-  ]
+  }
 }
