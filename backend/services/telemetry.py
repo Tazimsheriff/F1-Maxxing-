@@ -1,61 +1,71 @@
-import pandas as pd
+import csv
 from pathlib import Path
 from models.schemas import LapData, TelemetryContext
 from typing import List
 
 CSV_PATH = Path(__file__).parent.parent / "data" / "telemetry" / "session_data.csv"
 
-_df = None
+_records = None
 
-def _load_df():
-    global _df
-    if _df is None:
-        _df = pd.read_csv(CSV_PATH)
-    return _df
+def _load_records():
+    global _records
+    if _records is None:
+        _records = []
+        if CSV_PATH.exists():
+            with open(CSV_PATH, "r", encoding="utf-8") as f:
+                reader = csv.DictReader(f)
+                for r in reader:
+                    _records.append({
+                        "timestamp": int(r["timestamp"]),
+                        "lap": int(r["lap"]),
+                        "lap_time": float(r["lap_time"]),
+                        "sector1": float(r["sector1"]),
+                        "sector2": float(r["sector2"]),
+                        "sector3": float(r["sector3"]),
+                        "tyre_age": int(r["tyre_age"]),
+                        "compound": str(r["compound"]),
+                        "position": int(r["position"]),
+                    })
+    return _records
 
-def _row_to_lap(row) -> LapData:
+def _dict_to_lap(r) -> LapData:
     return LapData(
-        lap=int(row["lap"]),
-        lap_time=float(row["lap_time"]),
-        sector1=float(row["sector1"]),
-        sector2=float(row["sector2"]),
-        sector3=float(row["sector3"]),
-        tyre_age=int(row["tyre_age"]),
-        compound=str(row["compound"]),
-        position=int(row["position"]),
+        lap=r["lap"],
+        lap_time=r["lap_time"],
+        sector1=r["sector1"],
+        sector2=r["sector2"],
+        sector3=r["sector3"],
+        tyre_age=r["tyre_age"],
+        compound=r["compound"],
+        position=r["position"],
     )
 
 def get_context(lap: int) -> TelemetryContext:
-    df = _load_df()
-    
-    # Clamp lap to available range
-    available_laps = df["lap"].tolist()
+    records = _load_records()
+    if not records:
+        current = LapData(lap=20, lap_time=89.7, sector1=29.7, sector2=30.4, sector3=29.6, tyre_age=20, compound="MEDIUM", position=5)
+        return TelemetryContext(current_lap=current, recent_laps=[current], lap_delta=0.0, sector2_delta=0.0, tyre_age=20, trend="STABLE")
+
+    available_laps = [r["lap"] for r in records]
     if lap not in available_laps:
         lap = min(available_laps, key=lambda x: abs(x - lap))
-    
-    current_row = df[df["lap"] == lap].iloc[0]
-    current = _row_to_lap(current_row)
-    
-    # Get last 5 laps
-    recent_df = df[df["lap"] <= lap].tail(5)
-    recent = [_row_to_lap(r) for _, r in recent_df.iterrows()]
-    
-    # Calculate lap delta vs 3-lap average (excluding current)
-    prev3 = df[df["lap"] < lap].tail(3)
-    if len(prev3) > 0:
-        avg_time = prev3["lap_time"].mean()
+
+    current_rec = next(r for r in records if r["lap"] == lap)
+    current = _dict_to_lap(current_rec)
+
+    recent_recs = [r for r in records if r["lap"] <= lap][-5:]
+    recent = [_dict_to_lap(r) for r in recent_recs]
+
+    prev3 = [r for r in records if r["lap"] < lap][-3:]
+    if prev3:
+        avg_time = sum(r["lap_time"] for r in prev3) / len(prev3)
         lap_delta = round(current.lap_time - avg_time, 3)
-    else:
-        lap_delta = 0.0
-    
-    # Sector 2 delta
-    if len(prev3) > 0:
-        avg_s2 = prev3["sector2"].mean()
+        avg_s2 = sum(r["sector2"] for r in prev3) / len(prev3)
         sector2_delta = round(current.sector2 - avg_s2, 3)
     else:
+        lap_delta = 0.0
         sector2_delta = 0.0
-    
-    # Trend
+
     if len(recent) >= 3:
         times = [l.lap_time for l in recent]
         if times[-1] > times[-2] > times[-3]:
@@ -66,7 +76,7 @@ def get_context(lap: int) -> TelemetryContext:
             trend = "STABLE"
     else:
         trend = "STABLE"
-    
+
     return TelemetryContext(
         current_lap=current,
         recent_laps=recent,
@@ -77,5 +87,4 @@ def get_context(lap: int) -> TelemetryContext:
     )
 
 def load_full_session() -> List[dict]:
-    df = _load_df()
-    return df.to_dict(orient="records")
+    return _load_records()
