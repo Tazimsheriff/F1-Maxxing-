@@ -9,7 +9,8 @@ router = APIRouter()
 @router.post("/analyze", response_model=AnalyzeResponse)
 async def analyze_radio(
     audio: UploadFile = File(...),
-    lap: int = Form(default=20)
+    lap: int = Form(default=20),
+    lang: str = Form(default="en")
 ):
     # Save uploaded file to temp
     suffix = Path(audio.filename).suffix if audio.filename else ".wav"
@@ -33,12 +34,13 @@ async def analyze_radio(
         # 5. Fusion - driver state
         driver_state = fusion.compute_driver_state(emotion_result, af)
         
-        # 6. LLM reasoning
+        # 6. LLM reasoning with target language support (en, it, es, nl, de, fr)
         reasoning_result = reasoning.generate_insight(
             transcript=transcript,
             emotion=emotion_result,
             driver_state=driver_state,
-            telemetry=telem
+            telemetry=telem,
+            lang=lang
         )
         
         # 7. Second-by-second voice timeline analysis

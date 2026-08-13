@@ -21,6 +21,7 @@ import {
   Palette
 } from 'lucide-react'
 import { AnalysisResult } from '@/app/page'
+import { useLanguage } from './LanguageContext'
 
 interface F1CarViewer3DProps {
   result?: AnalysisResult | null
@@ -32,6 +33,7 @@ type LiveryType = 'redbull' | 'ferrari' | 'stealth' | 'cyber'
 type ViewPreset = 'orbit' | 'cockpit' | 'front_wing' | 'drs_rear' | 'side'
 
 export default function F1CarViewer3D({ result, loading }: F1CarViewer3DProps) {
+  const { t } = useLanguage()
   const containerRef = useRef<HTMLDivElement>(null)
   const mountRef = useRef<HTMLDivElement>(null)
   const sceneRef = useRef<THREE.Scene | null>(null)
@@ -519,7 +521,7 @@ export default function F1CarViewer3D({ result, loading }: F1CarViewer3DProps) {
           <div>
             <div className="flex items-center gap-2">
               <span className="font-extrabold text-sm tracking-wider font-mono" style={{ color: '#ffffff' }}>
-                3D TELEMETRY MATRIX
+                {t('viewer3d.title')}
               </span>
               <span
                 className="text-[10px] font-mono font-extrabold px-2 py-0.5 rounded-full border uppercase"
@@ -529,11 +531,11 @@ export default function F1CarViewer3D({ result, loading }: F1CarViewer3DProps) {
                   backgroundColor: `${themeColor}25`
                 }}
               >
-                {alertLevel}
+                {alertLevel === 'NOMINAL' ? t('driverState.nominal') : alertLevel}
               </span>
             </div>
             <p className="text-[11px] font-mono mt-0.5" style={{ color: '#94a3b8' }}>
-              Live Aero & Thermal Model (Interactive 360°)
+              {t('viewer3d.subtitle')}
             </p>
           </div>
         </div>
@@ -551,7 +553,7 @@ export default function F1CarViewer3D({ result, loading }: F1CarViewer3DProps) {
             }}
           >
             <span className="text-[10px] font-bold uppercase px-2 flex items-center gap-1" style={{ color: '#94a3b8' }}>
-              <Palette size={12} /> Livery:
+              <Palette size={12} /> {t('viewer3d.livery')}
             </span>
             <button
               onClick={() => setActiveLivery('redbull')}
@@ -666,7 +668,7 @@ export default function F1CarViewer3D({ result, loading }: F1CarViewer3DProps) {
           </div>
           <div className="text-center font-mono">
             <p className="text-sm font-bold tracking-wide" style={{ color: '#ffffff' }}>
-              APPLYING F1 LIVERY & MATERIALS...
+              {t('viewer3d.loading')}
             </p>
             <p className="text-xs mt-1" style={{ color: '#94a3b8' }}>{loadProgress}% Downloaded</p>
           </div>
@@ -686,7 +688,7 @@ export default function F1CarViewer3D({ result, loading }: F1CarViewer3DProps) {
           }}
         >
           <span className="text-[10px] font-bold uppercase tracking-wider px-2 shrink-0" style={{ color: '#94a3b8' }}>
-            Camera View:
+            {t('viewer3d.cameraView')}
           </span>
           <button
             onClick={() => handleViewPreset('orbit')}
@@ -698,7 +700,7 @@ export default function F1CarViewer3D({ result, loading }: F1CarViewer3DProps) {
             }}
           >
             <Compass size={14} />
-            <span>360° Orbit</span>
+            <span>{t('viewer3d.orbit')}</span>
           </button>
           <button
             onClick={() => handleViewPreset('cockpit')}
@@ -710,7 +712,7 @@ export default function F1CarViewer3D({ result, loading }: F1CarViewer3DProps) {
             }}
           >
             <Eye size={14} />
-            <span>Cockpit</span>
+            <span>{t('viewer3d.cockpit')}</span>
           </button>
           <button
             onClick={() => handleViewPreset('front_wing')}
@@ -722,7 +724,7 @@ export default function F1CarViewer3D({ result, loading }: F1CarViewer3DProps) {
             }}
           >
             <Zap size={14} />
-            <span>Front Aero</span>
+            <span>{t('viewer3d.frontAero')}</span>
           </button>
           <button
             onClick={() => handleViewPreset('drs_rear')}
@@ -734,7 +736,7 @@ export default function F1CarViewer3D({ result, loading }: F1CarViewer3DProps) {
             }}
           >
             <Flame size={14} />
-            <span>Rear DRS</span>
+            <span>{t('viewer3d.rearDrs')}</span>
           </button>
           <button
             onClick={() => handleViewPreset('side')}
@@ -746,7 +748,7 @@ export default function F1CarViewer3D({ result, loading }: F1CarViewer3DProps) {
             }}
           >
             <Layers size={14} />
-            <span>Side Aero</span>
+            <span>{t('viewer3d.sideAero')}</span>
           </button>
         </div>
 
@@ -769,17 +771,17 @@ export default function F1CarViewer3D({ result, loading }: F1CarViewer3DProps) {
               color: '#ffffff',
               border: autoRotate ? '1px solid #4ade80' : '1px solid #fcd34d'
             }}
-            title={autoRotate ? 'Pause Car Rotation' : 'Resume Car Rotation'}
+            title={autoRotate ? t('viewer3d.pauseRotation') : t('viewer3d.playRotation')}
           >
             {autoRotate ? (
               <>
                 <Pause size={14} />
-                <span>Pause Rotation</span>
+                <span>{t('viewer3d.pauseRotation')}</span>
               </>
             ) : (
               <>
                 <Play size={14} />
-                <span>Play Rotation</span>
+                <span>{t('viewer3d.playRotation')}</span>
               </>
             )}
           </button>
@@ -793,10 +795,10 @@ export default function F1CarViewer3D({ result, loading }: F1CarViewer3DProps) {
               color: wireframe ? '#00f0ff' : '#cbd5e1',
               border: wireframe ? '1px solid #00f0ff' : '1px solid transparent'
             }}
-            title="Toggle Wireframe Structural Mesh"
+            title={t('viewer3d.wireframe')}
           >
             <Box size={14} />
-            <span>Wireframe</span>
+            <span>{t('viewer3d.wireframe')}</span>
           </button>
 
           {/* Night / Track Lighting */}

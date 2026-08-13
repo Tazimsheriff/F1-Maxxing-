@@ -11,7 +11,7 @@ def extract_features(audio_path: str) -> AudioFeatures:
     rms_energy = float(np.mean(rms))
     
     # Pitch (fundamental frequency via YIN)
-    f0 = librosa.yin(y, fmin=60, fmax=400)
+    f0 = librosa.yin(y, fmin=60, fmax=400, sr=sr)
     
     # Filter out noisy/silent pitch estimates using frame energy threshold
     rms_frames = rms[0]

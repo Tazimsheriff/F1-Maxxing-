@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { Mic, Upload, Play, Loader2, Square, Radio } from 'lucide-react'
 import { AnalysisResult } from '@/app/page'
+import { useLanguage } from './LanguageContext'
 
 interface DemoClip {
   id: string
@@ -28,6 +29,7 @@ const STATE_COLORS: Record<string, string> = {
 }
 
 export default function AudioUploader({ onAnalysis, onLoading, onError, loading, onLiveTimelineUpdate }: Props) {
+  const { language, t } = useLanguage()
   const [activeTab, setActiveTab] = useState<'demo' | 'live'>('demo')
   
   // Demo upload state
@@ -129,6 +131,7 @@ export default function AudioUploader({ onAnalysis, onLoading, onError, loading,
     const formData = new FormData()
     formData.append('audio', file)
     formData.append('lap', String(lap ?? selectedLap))
+    formData.append('lang', language)
     
     try {
       const res = await fetch('http://localhost:8000/api/analyze', {
@@ -143,7 +146,7 @@ export default function AudioUploader({ onAnalysis, onLoading, onError, loading,
     } finally {
       onLoading(false)
     }
-  }, [onAnalysis, onLoading, onError, selectedLap])
+  }, [onAnalysis, onLoading, onError, selectedLap, language])
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault()
@@ -385,6 +388,7 @@ export default function AudioUploader({ onAnalysis, onLoading, onError, loading,
     const formData = new FormData()
     formData.append('audio', audioFile)
     formData.append('lap', String(selectedLap))
+    formData.append('lang', language)
 
     try {
       const res = await fetch('http://localhost:8000/api/analyze', {

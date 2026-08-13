@@ -81,42 +81,26 @@ def classify_emotion_from_features(af: AudioFeatures) -> EmotionResult:
 
 def query_hf_api(audio_path: str, model_id: str) -> list:
     token = os.getenv("HUGGINGFACE_TOKEN")
-    if not token or token == "hf_your-token-here":
+    if not token or token in ["hf_your-token-here", "your_token_here", ""]:
         token = os.getenv("HF_TOKEN")
         
-    headers = {}
-    if token and token != "hf_your-token-here":
-        headers["Authorization"] = f"Bearer {token}"
+    if not token or token in ["hf_your-token-here", "your_token_here", ""]:
+        print(f"No valid HuggingFace token configured. Skipping HF API query for {model_id}.")
+        return None
         
+    headers = {"Authorization": f"Bearer {token}"}
     url = f"https://api-inference.huggingface.co/models/{model_id}"
     
     try:
         with open(audio_path, "rb") as f:
             data = f.read()
+        response = requests.post(url, headers=headers, data=data, timeout=5)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            print(f"HF API {model_id} returned status {response.status_code}")
     except Exception as e:
-        print(f"Error reading audio file for HF API: {e}")
-        return None
-        
-    for attempt in range(3):
-        try:
-            response = requests.post(url, headers=headers, data=data, timeout=30)
-            if response.status_code == 200:
-                return response.json()
-            elif response.status_code == 503:
-                est = 5.0
-                try:
-                    est = response.json().get("estimated_time", 5.0)
-                except Exception:
-                    pass
-                print(f"HF Model {model_id} is loading, waiting {est}s (attempt {attempt+1}/3)...")
-                time.sleep(min(est, 5.0))
-                continue
-            else:
-                print(f"HF API {model_id} returned code {response.status_code}: {response.text}")
-                break
-        except Exception as e:
-            print(f"HF API {model_id} request error: {e}")
-            break
+        print(f"HF API query exception for {model_id}: {e}")
             
     return None
 

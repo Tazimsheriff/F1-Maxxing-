@@ -1,6 +1,7 @@
 'use client'
 
 import { AnalysisResult } from '@/app/page'
+import { useLanguage } from './LanguageContext'
 
 interface Props {
   result: AnalysisResult | null
@@ -64,6 +65,7 @@ const MOOD_DISPLAY: Record<string, { emoji: string; label: string; color: string
 }
 
 export default function DriverStateCard({ result, loading }: Props) {
+  const { t } = useLanguage()
   const ds = result?.driver_state
   const emotion = result?.emotion
   const alertStyle = ds ? ALERT_STYLES[ds.alert_level] : ALERT_STYLES.LOW
@@ -73,7 +75,7 @@ export default function DriverStateCard({ result, loading }: Props) {
   return (
     <div className="card" style={{ padding: '24px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <span className="label-tag">🧠 Driver State</span>
+        <span className="label-tag">🧠 {t('driverState.title')}</span>
         {ds && (
           <div style={{
             background: alertStyle.bg,
@@ -105,25 +107,25 @@ export default function DriverStateCard({ result, loading }: Props) {
         boxShadow: 'inset 0 0 10px rgba(0,0,0,0.8), 0 4px 10px rgba(0,0,0,0.15)',
       }}>
         <div style={{ background: '#09090c', padding: '8px', borderRadius: '4px', textAlign: 'center', border: '1px solid #1f1f2a' }}>
-          <div style={{ fontSize: '8px', color: '#8b8b9e', textTransform: 'uppercase', letterSpacing: '0.5px' }}>GEAR</div>
+          <div style={{ fontSize: '8px', color: '#8b8b9e', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{t('driverState.gear')}</div>
           <div style={{ fontSize: '26px', fontWeight: 'bold', color: ds ? '#ef4444' : '#00ff66', textShadow: ds ? '0 0 8px rgba(239,68,68,0.6)' : '0 0 8px rgba(0,255,102,0.6)' }}>
             {ds ? '8' : 'N'}
           </div>
         </div>
         <div style={{ background: '#09090c', padding: '8px', borderRadius: '4px', textAlign: 'center', border: '1px solid #1f1f2a' }}>
-          <div style={{ fontSize: '8px', color: '#8b8b9e', textTransform: 'uppercase', letterSpacing: '0.5px' }}>SPEED</div>
+          <div style={{ fontSize: '8px', color: '#8b8b9e', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{t('driverState.speed')}</div>
           <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#ffffff', textShadow: '0 0 5px rgba(255,255,255,0.4)', marginTop: '4px' }}>
             {ds ? '312' : '0'}<span style={{ fontSize: '10px', color: '#8b8b9e', marginLeft: '1px' }}>kmh</span>
           </div>
         </div>
         <div style={{ background: '#09090c', padding: '8px', borderRadius: '4px', textAlign: 'center', border: '1px solid #1f1f2a' }}>
-          <div style={{ fontSize: '8px', color: '#8b8b9e', textTransform: 'uppercase', letterSpacing: '0.5px' }}>LAP</div>
+          <div style={{ fontSize: '8px', color: '#8b8b9e', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{t('driverState.lap')}</div>
           <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#00d2ff', textShadow: '0 0 5px rgba(0,210,255,0.4)', marginTop: '4px' }}>
             {result?.lap ? result.lap : '--'}
           </div>
         </div>
         <div style={{ background: '#09090c', padding: '8px', borderRadius: '4px', textAlign: 'center', border: '1px solid #1f1f2a' }}>
-          <div style={{ fontSize: '8px', color: '#8b8b9e', textTransform: 'uppercase', letterSpacing: '0.5px' }}>DELTA</div>
+          <div style={{ fontSize: '8px', color: '#8b8b9e', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{t('driverState.delta')}</div>
           <div style={{ fontSize: '15px', fontWeight: 'bold', color: '#f59e0b', textShadow: '0 0 5px rgba(245,158,11,0.4)', marginTop: '5px' }}>
             {ds ? '+0.142' : '0.000'}
           </div>
@@ -174,9 +176,9 @@ export default function DriverStateCard({ result, loading }: Props) {
             </div>
           )}
 
-          <GaugeBar value={ds.stress} label="STRESS" color={getStressColor(ds.stress)} />
-          <GaugeBar value={ds.fatigue} label="FATIGUE" color={ds.fatigue > 0.6 ? '#8b5cf6' : '#d97706'} />
-          <GaugeBar value={ds.confidence} label="CONFIDENCE" color={ds.confidence > 0.6 ? '#16a34a' : '#d97706'} />
+          <GaugeBar value={ds.stress} label={t('driverState.stressLevel')} color={getStressColor(ds.stress)} />
+          <GaugeBar value={ds.fatigue} label={t('driverState.fatigue')} color={ds.fatigue > 0.6 ? '#8b5cf6' : '#d97706'} />
+          <GaugeBar value={ds.confidence} label={t('driverState.confidence')} color={ds.confidence > 0.6 ? '#16a34a' : '#d97706'} />
         </div>
       )}
 

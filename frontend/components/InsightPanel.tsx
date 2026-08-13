@@ -1,6 +1,7 @@
 'use client'
 
 import { AnalysisResult } from '@/app/page'
+import { useLanguage } from './LanguageContext'
 
 interface Props {
   result: AnalysisResult | null
@@ -8,6 +9,7 @@ interface Props {
 }
 
 export default function InsightPanel({ result, loading }: Props) {
+  const { t } = useLanguage()
   const r = result?.reasoning
 
   return (
@@ -18,7 +20,7 @@ export default function InsightPanel({ result, loading }: Props) {
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
         <span style={{ fontSize: '18px' }}>🤖</span>
-        <span className="label-tag">AI Race Engineer Insight</span>
+        <span className="label-tag">{t('insights.title')}</span>
         <div style={{ flex: 1 }} />
         {result && (
           <div style={{
