@@ -1,0 +1,110 @@
+[
+  {
+    "id": "clip_01",
+    "file": "clip_01.wav",
+    "label": "rear_tyres_degraded",
+    "lap": 24,
+    "display_name": "Rear tyres gone",
+    "expected_transcript": "The rear tyres are completely gone, I have no grip at all",
+    "expected_state": "STRESSED"
+  },
+  {
+    "id": "clip_02",
+    "file": "clip_02.wav",
+    "label": "car_sliding",
+    "lap": 22,
+    "display_name": "Car sliding everywhere",
+    "expected_transcript": "The car is sliding everywhere, I can't control it",
+    "expected_state": "STRESSED"
+  },
+  {
+    "id": "clip_03",
+    "file": "clip_03.wav",
+    "label": "understeer",
+    "lap": 18,
+    "display_name": "Understeer issue",
+    "expected_transcript": "I can't get the car rotated, massive understeer in sector two",
+    "expected_state": "STRESSED"
+  },
+  {
+    "id": "clip_04",
+    "file": "clip_04.wav",
+    "label": "feeling_good",
+    "lap": 12,
+    "display_name": "Everything feels good",
+    "expected_transcript": "Everything feels good, the car is well balanced",
+    "expected_state": "CONFIDENT"
+  },
+  {
+    "id": "clip_05",
+    "file": "clip_05.wav",
+    "label": "drs_issue",
+    "lap": 15,
+    "display_name": "DRS not opening",
+    "expected_transcript": "DRS is not opening, I am losing time on the straight",
+    "expected_state": "ALERT"
+  },
+  {
+    "id": "clip_06",
+    "file": "clip_06.wav",
+    "label": "overheating",
+    "lap": 20,
+    "display_name": "Brakes overheating",
+    "expected_transcript": "Brakes are overheating, I need to manage them",
+    "expected_state": "ALERT"
+  },
+  {
+    "id": "clip_07",
+    "file": "clip_07.wav",
+    "label": "gap_info",
+    "lap": 16,
+    "display_name": "Gap to leader",
+    "expected_transcript": "What is the gap to the car ahead",
+    "expected_state": "ALERT"
+  },
+  {
+    "id": "clip_08",
+    "file": "clip_08.wav",
+    "label": "box_request",
+    "lap": 26,
+    "display_name": "Pit stop request",
+    "expected_transcript": "I want to box this lap, the tyres are done",
+    "expected_state": "STRESSED"
+  },
+  {
+    "id": "clip_09",
+    "file": "clip_09.wav",
+    "label": "engine_issue",
+    "lap": 30,
+    "display_name": "Engine warning",
+    "expected_transcript": "Engine is cutting out in the high speed corners",
+    "expected_state": "STRESSED"
+  },
+  {
+    "id": "clip_10",
+    "file": "clip_10.wav",
+    "label": "push_mode",
+    "lap": 10,
+    "display_name": "Push mode",
+    "expected_transcript": "Copy, pushing now, this lap feels fast",
+    "expected_state": "CONFIDENT"
+  },
+  {
+    "id": "clip_11",
+    "file": "clip_11.wav",
+    "label": "safety_car",
+    "lap": 14,
+    "display_name": "Safety car query",
+    "expected_transcript": "Is there a safety car out there, I see yellow flags",
+    "expected_state": "ALERT"
+  },
+  {
+    "id": "clip_12",
+    "file": "clip_12.wav",
+    "label": "tired_driver",
+    "lap": 28,
+    "display_name": "Driver fatigued",
+    "expected_transcript": "I am really tired, the neck is hurting a lot",
+    "expected_state": "FATIGUED"
+  }
+]
