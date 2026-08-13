@@ -60,7 +60,7 @@ export default function TelemetryChart({ activeLap, activeMood, activeStress, la
   const [data, setData] = useState<LapRecord[]>([])
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/telemetry')
+    fetch('http://localhost:8001/api/telemetry')
       .then(r => r.json())
       .then(setData)
       .catch(() => {})
