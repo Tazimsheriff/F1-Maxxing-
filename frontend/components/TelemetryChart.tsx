@@ -56,13 +56,11 @@ const CustomTooltip = ({ active, payload }: any) => {
   )
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
-
 export default function TelemetryChart({ activeLap, activeMood, activeStress, lapDelta }: Props) {
   const [data, setData] = useState<LapRecord[]>([])
 
   useEffect(() => {
-    fetch(`${API_BASE}/api/telemetry`)
+    fetch('http://localhost:8000/api/telemetry')
       .then(r => r.json())
       .then(setData)
       .catch(() => {})

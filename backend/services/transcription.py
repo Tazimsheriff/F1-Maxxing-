@@ -1,10 +1,5 @@
-try:
-    import torch
-    from transformers import pipeline
-except ImportError:
-    torch = None
-    pipeline = None
-
+import torch
+from transformers import pipeline
 from pathlib import Path
 import json
 from models.schemas import AudioFeatures
@@ -32,8 +27,6 @@ def get_metadata_fallback(filename: str):
 
 def _get_pipeline():
     global _pipe
-    if torch is None or pipeline is None:
-        raise RuntimeError("Local ML libraries (torch/transformers) are not installed.")
     if _pipe is None:
         device = 0 if torch.cuda.is_available() else -1
         _pipe = pipeline(
