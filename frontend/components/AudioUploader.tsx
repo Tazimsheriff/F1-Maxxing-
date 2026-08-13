@@ -28,6 +28,8 @@ const STATE_COLORS: Record<string, string> = {
   FATIGUED: '#8b5cf6',
 }
 
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'
+
 export default function AudioUploader({ onAnalysis, onLoading, onError, loading, onLiveTimelineUpdate }: Props) {
   const { language, t } = useLanguage()
   const [activeTab, setActiveTab] = useState<'demo' | 'live'>('demo')
@@ -68,7 +70,7 @@ export default function AudioUploader({ onAnalysis, onLoading, onError, loading,
 
   // Fetch demo clips
   useEffect(() => {
-    fetch('http://localhost:8000/api/demo-clips')
+    fetch(`${API_BASE}/api/demo-clips`)
       .then(r => r.json())
       .then(setDemoClips)
       .catch(() => {})
@@ -134,7 +136,7 @@ export default function AudioUploader({ onAnalysis, onLoading, onError, loading,
     formData.append('lang', language)
     
     try {
-      const res = await fetch('http://localhost:8000/api/analyze', {
+      const res = await fetch(`${API_BASE}/api/analyze`, {
         method: 'POST',
         body: formData,
       })
@@ -157,7 +159,7 @@ export default function AudioUploader({ onAnalysis, onLoading, onError, loading,
 
   const handleDemoClip = async (clip: DemoClip) => {
     try {
-      const res = await fetch(`http://localhost:8000/data/radio/${clip.file}`)
+      const res = await fetch(`${API_BASE}/data/radio/${clip.file}`)
       const blob = await res.blob()
       const file = new File([blob], clip.file, { type: 'audio/wav' })
       handleFile(file, clip.lap)
@@ -391,7 +393,7 @@ export default function AudioUploader({ onAnalysis, onLoading, onError, loading,
     formData.append('lang', language)
 
     try {
-      const res = await fetch('http://localhost:8000/api/analyze', {
+      const res = await fetch(`${API_BASE}/api/analyze`, {
         method: 'POST',
         body: formData,
       })
